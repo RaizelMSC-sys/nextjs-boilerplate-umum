@@ -48,24 +48,12 @@ export default function DeveloperPage() {
           </div>
 
           <p className="text-white/60 text-sm leading-relaxed max-w-sm mb-6">
-            Platform streaming musik modern gratis tanpa iklan. Nikmati jutaan lagu, buat daftar putar Anda sendiri, dan temukan musik baru setiap hari dengan kualitas audio premium tanpa batasan.
+            Platform streaming musik by RazZev gratis tanpa iklan. Nikmati jutaan lagu, buat daftar putar Anda sendiri, dan temukan musik baru setiap hari dengan kualitas audio premium tanpa batasan.
           </p>
 
           {/* Social Links Grid */}
-          <div className="grid grid-cols-4 gap-3 w-full max-w-sm mb-4">
-            <a href="#" className="flex flex-col items-center justify-center gap-2 bg-[#1C1C1E] hover:bg-[#2C2C2E] p-4 rounded-2xl transition-colors">
-              <Globe className="w-6 h-6 text-white" />
-              <span className="text-[10px] text-white/70 font-medium">Website</span>
-            </a>
-            <a href="https://whatsapp.com/channel/0029Vb6ukqnHQbS4mKP0j80L" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center gap-2 bg-[#1C1C1E] hover:bg-[#2C2C2E] p-4 rounded-2xl transition-colors">
-              <Tv className="w-6 h-6 text-white" />
-              <span className="text-[10px] text-white/70 font-medium">Saluran</span>
-            </a>
-            <a href="#" className="flex flex-col items-center justify-center gap-2 bg-[#1C1C1E] hover:bg-[#2C2C2E] p-4 rounded-2xl transition-colors">
-              <Twitter className="w-6 h-6 text-white" />
-              <span className="text-[10px] text-white/70 font-medium">X</span>
-            </a>
-            <a href="#" className="flex flex-col items-center justify-center gap-2 bg-[#1C1C1E] hover:bg-[#2C2C2E] p-4 rounded-2xl transition-colors">
+          <div className="grid grid-cols-1 gap-3 w-full max-w-sm mb-4">
+            <a href="https://www.instagram.com/ghaniyyAj" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center gap-2 bg-[#1C1C1E] hover:bg-[#2C2C2E] p-4 rounded-2xl transition-colors">
               <Instagram className="w-6 h-6 text-white" />
               <span className="text-[10px] text-white/70 font-medium">Instagram</span>
             </a>
