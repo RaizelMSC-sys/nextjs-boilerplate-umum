@@ -33,13 +33,13 @@ export default function DeveloperPage() {
             <div className="absolute inset-0 bg-[#224032] rounded-[60%_40%_30%_70%_/_50%_60%_40%_50%] animate-[blob_8s_ease-in-out_infinite_reverse] scale-105" />
             <div className="relative w-full h-full rounded-[50%_50%_40%_60%_/_60%_40%_50%_50%] overflow-hidden border-2 border-[#4ADE80]/20 z-10">
               <Image 
-                src="https://f.top4top.io/p_3733w0g4e0.jpg" 
-                alt="SANN404 FORUM" 
+                src="/owner.jpg" 
+                alt="RazZev" 
                 fill 
                 sizes="192px"
                 className="object-cover"
               />
-            </div>
+            </div>`
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-2">
