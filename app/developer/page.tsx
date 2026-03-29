@@ -43,7 +43,7 @@ export default function DeveloperPage() {
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-2">
-            <h2 className="text-2xl font-bold text-white">SANN404 FORUM</h2>
+            <h2 className="text-2xl font-bold text-white">RazZev</h2>
             <CheckCircle2 className="w-6 h-6 text-blue-500 fill-blue-500/20" />
           </div>
 
