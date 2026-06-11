@@ -1,23 +1,39 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const q = searchParams.get('q');
+  const query = searchParams.get('q');
 
-  if (!q) {
+  if (!query) {
     return NextResponse.json([]);
   }
 
   try {
-    const res = await fetch(`http://suggestqueries.google.com/complete/search?client=youtube&ds=yt&client=firefox&q=${encodeURIComponent(q)}`);
-    const data = await res.json();
-    return NextResponse.json(data[1] || [], {
-      headers: {
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-      },
-    });
+    // Menggunakan client=firefox agar Google membalas dengan format Array JSON yang murni dan tidak memicu error parsing
+    const response = await fetch(
+      `https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=${encodeURIComponent(query)}`,
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      return NextResponse.json([]);
+    }
+
+    const data = await response.json();
+    
+    // Format balasan client=firefox adalah: ["keyword", ["saran1", "saran2", "saran3"]]
+    if (Array.isArray(data) && Array.isArray(data[1])) {
+      return NextResponse.json(data[1]);
+    }
+
+    return NextResponse.json([]);
   } catch (error) {
-    console.error('Error fetching suggestions:', error);
+    // Jika masih gagal, kita tangkap error-nya agar tidak melempar 500 ke layar depan
+    console.error('Error saat mengambil saran Google:', error);
     return NextResponse.json([]);
   }
 }

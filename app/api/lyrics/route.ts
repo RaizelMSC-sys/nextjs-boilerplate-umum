@@ -1,39 +1,68 @@
-import { NextResponse } from 'next/server';
-import YTMusic from 'ytmusic-api';
+import { NextRequest, NextResponse } from 'next/server';
 
-const ytmusic = new YTMusic();
-let initialized = false;
-
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-  
-  if (!id || id.length !== 11) return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
-  
+  const title = searchParams.get('title');
+  const artist = searchParams.get('artist');
+
+  if (!title || !artist) {
+    return NextResponse.json({ error: 'Missing title or artist' }, { status: 400 });
+  }
+
   try {
-    if (!initialized) {
-      await ytmusic.initialize();
-      initialized = true;
-    }
-    const song = await ytmusic.getSong(id) as any;
-    if (song && song.lyricsId) {
-      const lyrics = await ytmusic.getLyrics(song.lyricsId);
-      return NextResponse.json({ lyrics }, {
+    // Tembak langsung ke server LRCLIB menggunakan data judul dan artis dari Player.tsx
+    const response = await fetch(
+      `https://lrclib.org/api/get?artist=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(title)}`,
+      {
         headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        },
+          'User-Agent': 'MusicAppByRaizel (contact: github/raizel)'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      return NextResponse.json({ error: 'Lyrics not found on LRCLIB' }, { status: 404 });
+    }
+
+    const data = await response.json();
+
+    // Jika lirik tersinkronisasi (Format LRC) ditemukan
+    if (data.syncedLyrics) {
+      const lines = data.syncedLyrics.split('\n').map((line: string) => {
+        const match = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
+        if (match) {
+          const minutes = parseInt(match[1], 10);
+          const seconds = parseFloat(match[2]);
+          const time = minutes * 60 + seconds;
+          const text = match[3].trim();
+          return { time, text };
+        }
+        return null;
+      }).filter(Boolean);
+
+      return NextResponse.json({
+        lyrics: {
+          type: 'synced',
+          lines: lines
+        }
+      });
+    } 
+    
+    // Jika hanya ada lirik biasa tanpa penanda waktu
+    if (data.plainLyrics) {
+      const lines = data.plainLyrics.split('\n').map((line: string) => ({ text: line.trim() }));
+      return NextResponse.json({
+        lyrics: {
+          type: 'plain',
+          lines: lines
+        }
       });
     }
-    return NextResponse.json({ lyrics: null }, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-      },
-    });
-  } catch (error: any) {
-    if (error?.message?.includes('Invalid videoId')) {
-      return NextResponse.json({ lyrics: null });
-    }
-    console.error('Lyrics error:', error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+
+    return NextResponse.json({ error: 'No usable lyrics format' }, { status: 404 });
+
+  } catch (error) {
+    console.error('Error fetching lyrics from LRCLIB:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

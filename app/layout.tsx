@@ -5,9 +5,11 @@ import { Player } from '@/components/Player';
 import { AddToPlaylistModal } from '@/components/AddToPlaylistModal';
 import { PWARegister } from '@/components/PWARegister';
 import { BackgroundProvider } from '@/components/BackgroundProvider';
+// Kita hanya pakai ClerkProvider di tingkat layout utama
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
-  title: 'Music App',
+  title: 'Music App By Raizel', // Sudah saya ganti ke namamu
   description: 'Platform streaming musik modern',
   manifest: '/manifest.json',
   appleWebApp: {
@@ -26,15 +28,21 @@ export const viewport: Viewport = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en">
-      <body className="text-white antialiased pb-24 min-h-screen" suppressHydrationWarning>
-        <BackgroundProvider />
-        <PWARegister />
-        {children}
-        <Player />
-        <BottomNav />
-        <AddToPlaylistModal />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="text-white antialiased pb-24 min-h-screen" suppressHydrationWarning>
+          <BackgroundProvider />
+          <PWARegister />
+          
+          <main>
+            {children}
+          </main>
+
+          <Player />
+          <BottomNav />
+          <AddToPlaylistModal />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

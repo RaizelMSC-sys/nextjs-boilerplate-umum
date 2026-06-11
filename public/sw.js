@@ -7,5 +7,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Paksa bypass untuk Clerk agar tidak terganggu oleh lifecycle PWA
+  if (event.request.url.includes('clerk')) {
+    return;
+  }
+  
   // Pass-through fetch to satisfy PWA requirements
+  event.respondWith(fetch(event.request));
 });
